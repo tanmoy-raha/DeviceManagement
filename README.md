@@ -1,6 +1,6 @@
-# surfCSS
+# DeviceMgmt
 
-> surfCSS
+>DeviceMgmt
 
 ## Build Setup
 
