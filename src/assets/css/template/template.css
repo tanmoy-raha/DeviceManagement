@@ -1,0 +1,17 @@
+#tblDetail th,
+.netVatDetails th,
+.netVatTotal th,
+#tblDetail td,
+.netVatDetails td,
+.netVatTotal td {
+  height: auto;
+  padding: 0.6rem 1.6rem !important;
+  border-spacing: 0;
+  border-collapse: separate;
+}
+#invoicePrintViewContainer .list-group-wrapper .list-group .list-group-item:hover {
+  box-shadow: none;
+}
+#invoicePrintViewContainer .list-group-item {
+  padding: 0rem 0rem 0.4rem 0rem;
+}

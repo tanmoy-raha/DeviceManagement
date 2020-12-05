@@ -1,0 +1,444 @@
+<template>
+<!-- <v-combobox   v-model='model' :items='items'  @blur="onBlurHandler"/> -->
+<v-combobox 
+    v-model="model" 
+    :items="items" 
+    v-bind="$props" 
+    :search-input.sync="nodataval" 
+    @change="change" 
+    @click:clear="clear($event)" 
+    @focus="focus" 
+    @blur="onBlurHandler"
+    @update:search-input="updatesearchinput" 
+    :autocomplete="isGoogleChrome()? 'disabled' : 'off'"
+    :hide-details="hideDetails"
+    :error-messages="errorMessages"
+    :rules="rules"
+    >
+</v-combobox>
+<!-- :value="value"  -->
+</template>
+
+<script>
+export default {
+    name: 'Vueeditabledropdown',
+    props: {
+        /**
+         * id.
+         */
+        id: {
+            type: String,
+            default: '',
+            required: false
+        },
+        /**
+         * Can be an array of objects or array of strings. When using objects, will look for a text and value field. This can be changed using the item-text and item-value props..
+         */
+        items: {
+            type: Array,
+            default: [],
+            required: false
+
+        },
+        /**
+         * Set property of items's text value.
+         */
+        'item-text': {
+            type: String,
+            default: undefined,
+            required: false
+        },
+        /**
+         * Set property of items's value - must be primitive. Dot notation is supported.
+         */
+        'item-value': {
+            type: String,
+            default: undefined,
+            required: false
+        },
+        /**
+         * Search value. Can be use with .sync modifier.
+         */
+        'search-input': {
+            type: String,
+            default: undefined,
+            required: false
+        },
+        /**
+         *  Allow the menu to overflow off the screen.
+         */
+        'allow-overflow': {
+            type: Boolean,
+            default: true,
+            required: false
+        },
+        /**
+         *  Specifies which DOM element that this component should detach to.String can be any valid querySelector and Object can be any valid Node. This will attach to the root v-app component by default.
+         */
+        attach: {
+            type: String,
+            default: undefined,
+            required: false
+        },
+        /**
+         *  When searching, will always highlight the first option
+         */
+        'auto-select-first': {
+            type: Boolean,
+            default: false,
+            required: false
+        },
+        /**
+         * Add input clear functionality, default icon is Material Icons clear
+         */
+        clearable: {
+            type: Boolean,
+            default: true,
+            required: false
+        },
+        /**
+         * Creates counter for input length; if no number is specified, it defaults to 25. Does not apply any validation.
+         */
+        counter: {
+            type: Boolean,
+            default: undefined,
+            required: false
+        },
+        /**
+         * Hides the menu when there are no options to show. Useful for preventing the menu from opening before results are fetched asynchronously. Also has the effect of opening the menu when the items array changes if not already open.
+         */
+        'hide-no-data': {
+            type: Boolean,
+            default: false,
+            required: false
+        },
+        /**
+         * Do not display in the select menu items that are already selected
+         */
+        'hide-selected': {
+            type: Boolean,
+            default: false,
+            required: false
+        },
+        /**
+         * Disable the input.
+         */
+        disabled: {
+            type: Boolean,
+            default: false,
+            required: false
+        },
+        /**
+         *  Sets input label
+         */
+        label: {
+            type: String,
+            default: undefined,
+            required: false
+        },
+        /**
+         * Set property of items's value - must be primitive. Dot notation is supported.
+         */
+        'menu-props': {
+            type: [String, Array, Object],
+            default: function () {
+                return {
+                    "closeOnClick": false,
+                    "closeOnContentClick": false,
+                    "openOnClick": false,
+                    "maxHeight": 300,
+                    "offsetY": true,
+                    "offsetOverflow": true,
+                    "transition": false
+                }
+            },
+            required: false
+        },
+        /**
+         *  Changes select to multiple. Accepts array for value
+         */
+        multiple: {
+            type: Boolean,
+            default: false,
+            required: false
+        },
+        /**
+         *  Display text when there is no data
+         */
+        'no-data-text': {
+            type: String,
+            default: '$vuetify.noDataText',
+            required: false
+        },
+        /**
+         *  Do not apply filtering when searching. Useful when data is being filtered server side
+         */
+        'no-filter': {
+            type: Boolean,
+            default: false,
+            required: false
+        },
+        /**
+         * Sets the input’s placeholder text
+         */
+        placeholder: {
+            type: String,
+            default: "",
+            required: false
+        },
+        /**
+         * Puts input in readonly state
+         */
+        readonly: {
+            type: Boolean,
+            default: false,
+            required: false
+        },
+        /**
+         * Changes the selection behavior to return the object directly rather than the value specified with item-value
+         */
+        'return-object': {
+            type: Boolean,
+            default: true,
+            required: false
+        },
+        /**
+         * Changes display of selections to chips
+         */
+        chips: {
+            type: Boolean,
+            default: false,
+            required: false
+        },
+        /**
+         * v-model value.
+         */
+        value: {
+            type: [String, Array, Object],
+            default: '',
+            required: true
+        },
+        /**
+         * v-model value.
+         */
+        mustbevalid: {
+            type: Boolean,
+            default: false,
+            required: false
+        },
+        hideDetails: {
+      type: Boolean,
+      default: true
+    },
+    rules: {
+      type: [String, Array, Object],
+      default: () => [],
+      required: false
+    },
+errorMessages: {
+      type: String,
+      default: "",
+      required: false
+    },
+        /**
+         * Blur event
+         */
+        // onBlur: {
+        //     type: Function,
+        //     default: () => 1,
+        //     required: false
+        // },
+        /**
+         * change event
+         */
+        // onChange: {
+        //     type: Function,
+        //     default: () => 1,
+        //     required: false
+        // },
+        /**
+         * click:clear event
+         */
+        // onClear: {
+        //     type: Function,
+        //     default: () => 1,
+        //     required: false
+        // },
+        // /**
+        //  * focus event
+        //  */
+        // focus: {
+        //     type: Function,
+        //     default: () => 1,
+        //     required: false
+        // },
+        // /**
+        //  * update:search-input event
+        //  */
+        // 'update:search-input': {
+        //     type: Function,
+        //     default: () => 1,
+        //     required: false
+        // },
+
+    },
+
+    data: () => ({
+        nodataval: null,
+    }),
+    mounted: function () {
+        if (this.model && this.model.length === 0){
+              this.model = ''  
+        }
+    },
+    computed: {
+        model: {
+            get() {
+                return this.value;
+            },
+            // We let the parent know if it is checked or not, by sending the ID
+            set(val) {
+                this.$emit("input", val)
+            }
+        }
+    },
+
+    methods: {
+        change(val) {
+            
+            if (this.mustbevalid == true) {
+                if (this.items.length > 0) {
+                    if (typeof (this.items[0]) === 'object') {
+                        if (typeof (val) === 'object') {
+                            if (val.length >= 0) {
+                                let mval = val[val.length - 1]
+                                if (typeof (val[val.length - 1]) === 'string') {
+                                    val.splice(val.length - 1, 1)
+                                    this.model = this.model;
+                                }
+
+                            }
+                        } else {
+
+                            if (this.nodataval == null || this.nodataval == '') {
+
+                            } else {
+
+                                val = null
+                                
+                                this.value = null
+                                this.model = [];
+                                //  this.value=""
+
+                            }
+                        }
+
+                    } else if (typeof (this.items[0]) === 'string') {
+
+                        let resultArr = [];
+                        if (typeof (val) === 'object') {
+
+                            for (let index = 0; index <val.length; index++) {
+                                if (this.items.includes(val[index])) {
+                                    resultArr.push(val[index]);
+                                } else {
+
+                                }
+                            };
+                            val=resultArr;
+                           // this.value = resultArr;
+                            this.model = resultArr;
+                        } else {
+                            if (this.nodataval == null || this.nodataval == '') {
+
+                            } else {
+
+                                val = null
+                                
+                                this.value = null
+                                this.model = [];
+                                //  this.value=""
+
+                            }
+
+                        }
+
+                    }
+
+                   
+                }
+            }
+            this.$emit('change', val)
+            
+            //this.model = [];
+
+        },
+        onBlurHandler(e) {
+            
+            if (this.value.length == 0) {
+                this.model = ''
+            }
+            this.$emit('blur', e)
+        },
+        /**
+         * click:clear event
+         */
+        clear(e) {
+            this.$emit('clear',e)
+        },
+       
+        /**
+         * focus event
+         */
+         focus(e) {
+
+            this.$emit('focus',e)
+        },
+       
+        /**
+         * update:search-input event
+         */
+        updatesearchinput(strval) {  
+            this.$emit('update:search-input',strval)
+        },
+          isGoogleChrome(){
+            var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+            return isChrome;
+        }
+    }
+}
+</script>
+//****************************************************************************************************************************************************************************************
+//*      name                       type                            default                   description
+//****************************************************************************************************************************************************************************************
+//*     allow-overflow              boolean                         true                      Allow the menu to overflow off the screen
+//*     attach                      any                             false                     Specifies which DOM element that this component should detach to.String can be any valid querySelector and Object can be any valid Node. This will attach to the root v-app component by default.
+//*     auto-select-first           boolean                         false                     When searching, will always highlight the first option
+//*     clearable                   boolean                         false                     Add input clear functionality, default icon is Material Icons clear
+//*     chips                       boolean                         false                     Changes display of selections to chips
+//*     counter                     boolean | number | string       undefined                 Creates counter for input length; if no number is specified, it defaults to 25. Does not apply any validation.
+//*     disabled                    boolean                         false                     Disable the input
+//*     hide-no-data                boolean                         false                     Hides the menu when there are no options to show. Useful for preventing the menu from opening before results are fetched asynchronously. Also has the effect of opening the menu when the items array changes if not already open
+//*     hide-selected               boolean                         false                     Do not display in the select menu items that are already selected
+//*     id                          string                          undefined                 Sets the DOM id on the component
+//*     items                       array                           []                        Can be an array of objects or array of strings. When using objects, will look for a text and value field. This can be changed using the item-text and item-value props.
+//*                                                                                              {
+//*                                                                                                 text: string | number | object
+//*                                                                                                 value: string | number | object
+//*                                                                                              }
+//*     item-text                   string | array | function       text                      Set property of items's text value
+//*     item-value                  string | array | function       value                     Set property of items's value - must be primitive. Dot notation is supported
+//*     menu-props                  string | array | object         {"closeOnClick":false,    Pass props through to the v-menu component. Accepts either a string for boolean props menu-props="auto, overflowY", or an object :menu-props="{ auto: true, overflowY: true }"
+//*                                                                   "closeOnContentClick":false, 
+//*                                                                    "openOnClick":false, 
+//*                                                                    "maxHeight":300, 
+//*                                                                    "offsetY":true, 
+//*                                                                    "offsetOverflow":true, 
+//*                                                                    "transition":false}
+//*     multiple                    boolean                         false                     Changes select to multiple. Accepts array for value
+//*     no-filter                   boolean                         false                     Do not apply filtering when searching. Useful when data is being filtered server side
+//*     no-data-text                string                          '$vuetify.noDataText'     Display text when there is no data    
+//*     placeholder                 string                          undefined                 Sets the input’s placeholder text
+//*     readonly                    boolean                         false                     Puts input in readonly state
+//*     return-object               boolean                         true                      Changes the selection behavior to return the object directly rather than the value specified with item-value
+//*     mustbevalid                 boolean                         false                     Validation valid value only from Items list

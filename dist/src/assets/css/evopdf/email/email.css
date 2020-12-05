@@ -1,0 +1,132 @@
+html,
+body {
+	margin: 0;
+	padding: 0
+}
+
+html {
+	font-family: "Open Sans", "Helvetica Neue", "Helvetica", sans-serif;
+	font-size: 0.75rem;
+	line-height: 1.618
+}
+
+body {}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Open Sans", "Helvetica Neue", "Helvetica", sans-serif;
+	line-height: 1.2;
+	text-rendering: optimizeLegibility;
+	text-transform: none;
+	margin: 0 0 0.8rem 0
+}
+
+h2 {
+	font-size: 2rem
+}
+
+h3 {
+	font-size: 1.75rem
+}
+
+a {
+	color: #000;
+	text-decoration: none !important
+}
+
+.templateReport,
+.gridReport {
+	font-size: 1rem
+}
+
+.gridReport td {
+	padding: 0.3rem 0
+}
+
+.gridReport th {
+	border-bottom: 1px solid #000;
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	font-size: 0.9rem;
+	white-space: nowrap;
+	padding-bottom: 0.6rem;
+}
+
+.gridReport tr.totals td {
+	border-top: 1px solid #000;
+}
+
+@page {
+	size: auto;
+	margin: 3mm
+}
+
+.templateReport,
+.groupHeader {
+	font-size: 1rem
+}
+
+.v-data-table tr+tr td {
+	border-top-style: solid;
+	border-top-width: 1px
+}
+
+.reportHeaderPadding {
+	padding-bottom: 20px
+}
+
+.templateReport thead th {
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	border-bottom: 1px solid #001419;
+	font-weight: 600;
+	padding-bottom: 1.2rem;
+}
+.s-text-size--s{
+	font-size: 0.89rem;
+}
+.s-text-size--l--semibold {
+	font-weight: 600;
+	font-size: 1.13rem;
+	padding: 7px 0
+}
+.s-text-size--l--bold {
+	font-weight: 800;
+	font-size: 1.13rem;
+	padding: 7px 0
+}
+.DetailData {
+	padding: 7px 0
+}
+
+.total-row-bg {
+	font-weight: 600;
+	font-size: 1.13rem;
+	padding: 7px 0
+}
+
+.templateReport tr.totals td {
+	border-top: 1px solid #001419;
+	font-weight: 600;
+	padding: 7px 0;
+}
+
+.text-end {
+  text-align: right;
+  padding-right: 10px;
+  
+}
+  .reportHeaderPaddingRight{
+	  padding-right:50px
+  }
+  .reportHeaderPaddingLeft{
+	padding-left:43px
+}
+.text-left{
+	padding-right: 10px;
+}
