@@ -130,12 +130,9 @@
   </div>
 </template>
 <script>
-// import ShowStaffComponent from "./Shared/ShowStaffComponent";
-import AddDevice from "./Shared/AddDevice";
+
 export default {
-  components: {
-    AddDevice,
-  },
+ 
   data() {
     return {
       ID: "",
@@ -412,51 +409,30 @@ export default {
           //debugger;
           if (res.toLowerCase() == "ok") {
             this.$refs.deleteConfirmationPopup.hide();
-            this.checkTransactionOnDelete(item);
+            this.OnDelete(item);
           } else {
             this.$refs.deleteConfirmationPopup.hide();
           }
         });
     },
-    checkTransactionOnDelete(item) {
+    OnDelete(item) {
       debugger;
       var JsonParam = {
-        AccessGroupID: item.ID,
+        ID: item.ID,
+         DeviceIMEI: item.DeviceIMEI,
       };
       this.showLoaderMixin();
       let vm = this;
       vm.axiosPostMixin(
-        "/api/AccessRight/DoCheckAccessGroupInTransaction",
+        "/api/DeviceManage/DeleteDeviceDetails",
         JsonParam
       )
         .then(function (response) {
-          console.log("check delete response   ====> ", response);
+          
           if (response != null || response != undefined) {
             vm.hideLoaderMixin();
-            if (response.status == true) {
-              vm.delmsg =
-                "Cannot delete this access group as it is belongs to a staff member";
-              vm.$refs.deleteConfirmationPopup
-                .open("Confirmation Message", "", {
-                  width: 600,
-                  buttonList: [
-                    {
-                      name: "OK",
-                      class: "s-swatch-primary s-button",
-                    },
-                  ],
-                })
-                .then((res) => {
-                  //debugger;
-                  if (res.toLowerCase() == "ok") {
-                    vm.$refs.deleteConfirmationPopup.hide();
-                  }
-                });
-            } else {
-              vm.onDelete(item);
-            }
-          } else {
-            vm.onDelete(item);
+            vm.LoadData();
+
           }
         })
         .catch(function (error) {
@@ -465,78 +441,7 @@ export default {
           console.log(error);
         });
     },
-    showMsg() {
-      this.delmsg =
-        "Cannot delete this access group as it is belongs to a staff member";
-      this.$refs.deleteConfirmationPopup
-        .open("Confirmation Message", "", {
-          width: 600,
-          buttonList: [
-            {
-              name: "OK",
-              class: "s-swatch-primary s-button",
-            },
-          ],
-        })
-        .then((res) => {
-          //debugger;
-          if (res.toLowerCase() == "ok") {
-            this.$refs.deleteConfirmationPopup.hide();
-          } else {
-            this.$refs.deleteConfirmationPopup.hide();
-          }
-        });
-    },
-
-    showDefaultMsg() {
-      this.delmsg = "Cannot delete this access group as it is system defined";
-      this.$refs.deleteConfirmationPopup
-        .open("Confirmation Message", "", {
-          width: 600,
-          buttonList: [
-            {
-              name: "OK",
-              class: "s-swatch-primary s-button",
-            },
-          ],
-        })
-        .then((res) => {
-          //debugger;
-          if (res.toLowerCase() == "ok") {
-            this.$refs.deleteConfirmationPopup.hide();
-          } else {
-            this.$refs.deleteConfirmationPopup.hide();
-          }
-        });
-    },
-    onDelete(item) {
-      //alert('id ===> ' + item.ID)
-
-      var JsonParam = {
-        AccessGroupID: item.ID,
-      };
-
-      let vm = this;
-      this.axiosPostMixin(
-        "/api/AccessRight/DoDeleteAccessGroup",
-        JsonParam
-      ).then(function (response) {
-        if (response != null || response != undefined) {
-          if (response.jsondata != undefined || response.jsondata != null) {
-            let jData = vm.removeNULLMixin(response.jsondata);
-            jData = eval(jData);
-            if (jData.length > 0) {
-              vm.LoadAccessGroup(
-                vm.pageno,
-                vm.sortfield,
-                vm.sortdesc == true ? "DESC" : "ASC",
-                vm.itemPerPage
-              );
-            }
-          }
-        }
-      });
-    },
+    
     dataSorce: function (options) {
       //   this.sortfield = options.sortBy[0];
       //   this.sortdesc = options.sortDesc[0];
